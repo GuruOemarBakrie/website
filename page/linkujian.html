@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Pembuka Link Chrome</title>
+    <style>
+        body { 
+            font-family: Arial; 
+            text-align: center; 
+            padding: 50px; 
+        }
+        #warning {
+            color: red;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Buka Google Form</h1>
+    <button onclick="openInChrome('https://forms.gle/rGLkcsV8Us3Y5dvw8')">
+        Buka di Chrome
+    </button>
+    <div id="warning"></div>
+
+    <script>
+        function openInChrome(url) {
+            const warningEl = document.getElementById('warning');
+            
+            // Deteksi platform dan browser
+            const isChrome = /Chrome/.test(navigator.userAgent);
+            const isAndroid = /Android/.test(navigator.userAgent);
+            const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+            const isWindows = /Windows/.test(navigator.platform);
+            const isMac = /Mac/.test(navigator.platform);
+
+            try {
+                if (isAndroid) {
+                    // Metode Android
+                    window.location.href = `intent://${url.replace('https://', '')}#Intent;scheme=https;package=com.android.chrome;end`;
+                } else if (isIOS) {
+                    // Metode iOS
+                    window.location.href = `googlechrome:///${url}`;
+                } else if (isWindows || isMac) {
+                    // Metode Desktop
+                    window.location.href = `googlechrome://navigate?url=${encodeURIComponent(url)}`;
+                } else if (isChrome) {
+                    // Jika sudah di Chrome
+                    window.location.href = url;
+                } else {
+                    // Tampilkan peringatan
+                    warningEl.innerHTML = `
+                        <p>Silakan buka link di Google Chrome</p>
+                        <p>Download Chrome: <a href="https://www.google.com/chrome/">Unduh di sini</a></p>
+                    `;
+                }
+            } catch (error) {
+                warningEl.innerHTML = `Gagal membuka: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
